@@ -5,9 +5,8 @@ import time
 
 def today_todo(today_time, path):
 
-    f = open(path)
-    text = f.read()
-    f.close()
+    with open(path, "r") as f:
+        text = f.read()
 
     find = len(re.findall(today_time, text))
     if find:
@@ -20,24 +19,22 @@ def new_todo(today_time, path):
 
     try:
         f = open(path, "r")
+        f.close()
     except:
         f = open(path, "w")
         f.close()
-        f = open(path, "r")
 
     text1 = input("代办:")
     if today_todo(today_time, path) is not None:
-        last_line = f.readlines()[-1]
-        index = int(re.findall("(.*)\..*", last_line)[0]) + 1
-        f.close()
-        f = open(path, "a")
-        f.write("{}.{}\n".format(index, text1))
-        f.close()
+
+        with open(path, "r") as f:
+            last_line = f.readlines()[-1]
+            index = int(re.findall("(.*)\..*", last_line)[0]) + 1
+        with open(path, "a") as f:
+            f.write("{}.{}\n".format(index, text1))
     else:
-        f.close()
-        f = open(path, "a")
-        f.write("{}\n\n1.{}\n".format(today_time, text1))
-        f.close()
+        with open(path, "a") as f:
+            f.write("{}\n\n1.{}\n".format(today_time, text1))
 
 
 def yes_todo(path):
@@ -47,9 +44,9 @@ def yes_todo(path):
     index2 = "%s." % index1
     index4 = None
     text = list()
-    f = open(path, "r")
-    lines = f.readlines()
-    f.close()
+    
+    with open(path, "r") as f:
+        lines = f.readlines()
 
     for line in lines:
         text.append(line)
@@ -63,18 +60,16 @@ def yes_todo(path):
                 new_text = new_text.replace('\n', '')
                 text.insert(index, "%s\t√\n" % new_text)
     
-    f = open(path, "w")
-    for a in text:
-        f.write(a)
-    f.close()
+    with open(path, "w") as f:
+        for a in text:
+            f.write(a)
                 
 
 def max_num(path):
     
     nums = list()
-    f = open(path, "r")
-    lines = f.readlines()
-    f.close()
+    with open(path, "r") as f:
+        lines = f.readlines()
     
     for line in lines:
         nums.append(len(line))
@@ -85,9 +80,8 @@ def max_num(path):
 
 def printf(today_time, path):
 
-    f = open(path, "r")
-    lines = f.readlines()
-    f.close()
+    with open(path, "r") as f:
+        lines = f.readlines()
 
     text = today_todo(today_time, path)
     num = max_num(path)
